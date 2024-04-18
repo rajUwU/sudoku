@@ -1,4 +1,5 @@
 from gui import Grid
+from functions import solve
 from PyQt5.QtWidgets import QApplication
 import sys
 sampleMatrix = [
@@ -15,5 +16,6 @@ sampleMatrix = [
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    sampleMatrix = solve(sampleMatrix)
     ex = Grid(sampleMatrix)
     sys.exit(app.exec_())
