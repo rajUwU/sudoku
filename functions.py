@@ -36,14 +36,43 @@ def solve(grid, r=0, c=0):
                 grid[r][c] = 0 #Set back to 0, try new value
         return False #Nothing worked, return False
 
+def generate(difficulty):
+    grid = [ [0]*9 for _ in range(9)]
+    import random
+    for val in range(9):
+        i,j = random.choice([_ for _ in range(9)]), random.choice([_ for _ in range(9)])
+        grid[i][j] = val
 
+    grid = solve(grid)
+
+    if difficulty == "easy":
+        empty_cells = random.choice([_ for _ in range(50, 60)])
+    elif difficulty == "medium":
+        empty_cells = random.choice([_ for _ in range(60, 70)])
+    elif difficulty == "hard":
+        empty_cells = random.choice([_ for _ in range(80, 90)])
+    else:
+        return False
+
+    for _ in range(empty_cells):
+        i,j = random.choice([_ for _ in range(9)]), random.choice([_ for _ in range(9)])
+        grid[i][j] = 0
+
+    return grid
 
 if __name__ == '__main__':
-    # Solve the Sudoku puzzle and update the sampleMatrix
-    solution = solve(sampleMatrix)
-    if solution:
-        sampleMatrix = solution  # Update sampleMatrix with the solved grid
-        print("Sudoku puzzle solved successfully:")
-        print(sampleMatrix)
+
+    generated = generate('easy')
+    if generated:
+        print(generated)
     else:
-        print("No solution found for the Sudoku puzzle.")
+        print("Enter a valid difficulty")
+
+    # Solve the Sudoku puzzle and update the sampleMatrix
+    # solution = solve(sampleMatrix)
+    # if solution:
+    #     sampleMatrix = solution  # Update sampleMatrix with the solved grid
+    #     print("Sudoku puzzle solved successfully:")
+    #     print(sampleMatrix)
+    # else:
+    #     print("No solution found for the Sudoku puzzle.")
