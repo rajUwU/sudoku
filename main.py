@@ -1,4 +1,4 @@
-from gui import Grid
+from gui import Sudoku
 from functions import solve, generate
 from PyQt5.QtWidgets import QApplication
 import sys
@@ -21,5 +21,6 @@ if __name__ == '__main__':
     matrix = generated
     # solved = solve(matrix)
     # matrix = solved
-    ex = Grid(matrix)
+    sudoku_app = Sudoku(matrix)
+    sudoku_app.show()
     sys.exit(app.exec_())
