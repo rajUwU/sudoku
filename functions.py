@@ -45,11 +45,11 @@ def generate(difficulty):
 
     grid = solve(grid)
 
-    if difficulty == "easy":
+    if difficulty == "Easy":
         empty_cells = random.choice([_ for _ in range(50, 60)])
-    elif difficulty == "medium":
+    elif difficulty == "Medium":
         empty_cells = random.choice([_ for _ in range(60, 70)])
-    elif difficulty == "hard":
+    elif difficulty == "Hard":
         empty_cells = random.choice([_ for _ in range(80, 90)])
     else:
         return False

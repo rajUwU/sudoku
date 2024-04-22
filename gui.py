@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QLabel, QFrame, QGroupBox, QPushButton, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QLabel, QFrame, QGroupBox,
+                              QPushButton, QHBoxLayout, QVBoxLayout, QFormLayout, QComboBox)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from functions import generate
@@ -9,34 +10,50 @@ class Sudoku(QWidget):
     def __init__(self, matrix):
         super().__init__()
         self.title = 'Sudoku'
-        self.width = 400
+        self.width = 260
         self.height = 0
+        self.setFixedSize(self.width, self.height)
         self.matrix = matrix
+        self.difficulty = "Easy"
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(0, 0, self.width, self.height)
 
-        self.mainLayout = QHBoxLayout()
+        self.mainLayout = QVBoxLayout()
         self.Menu()
         self.setLayout(self.mainLayout)
 
     def Menu(self):
-        menu = QGroupBox("Sudoku")
-        layout = QVBoxLayout()
+        menuWidget = QWidget()
+        menuLayout = QVBoxLayout()
 
-        btn = QPushButton("Solve a Sudoku")
-        btn.clicked.connect(lambda : self.on_button_clicked(0))
-        layout.addWidget(btn)
-    
-        btn = QPushButton("Generate a Sudoku")
-        btn.clicked.connect(lambda : self.on_button_clicked(1))
-        layout.addWidget(btn)
+        # Add the "Solve a Sudoku" button
+        solveBtn = QPushButton("Solve a Sudoku")
+        solveBtn.clicked.connect(lambda: self.on_button_clicked(0))
+        menuLayout.addWidget(solveBtn)
 
+        def updateDifficulty(text):
+            self.difficulty = text
 
-        menu.setLayout(layout)
-        self.mainLayout.addWidget(menu)
+        # Add the difficulty selector
+        difficultyLayout = QFormLayout()
+        difficultyDropDown = QComboBox()
+        difficultyDropDown.addItems(["Easy", "Medium", "Hard"])
+        difficultyLayout.addRow(QLabel("Difficulty:"), difficultyDropDown)
+        difficultyDropDown.currentTextChanged.connect(updateDifficulty)
+        menuLayout.addLayout(difficultyLayout)
+
+        # Add the "Generate a Sudoku" button
+        generateBtn = QPushButton("Generate a Sudoku")
+        generateBtn.clicked.connect(lambda: self.on_button_clicked(difficultyDropDown.currentText()))
+        menuLayout.addWidget(generateBtn)
+
+        menuWidget.setLayout(menuLayout)
+        self.mainLayout.addWidget(menuWidget)
+            
+
 
     def sudoku(self):
         self.width = 580
@@ -81,21 +98,9 @@ class Sudoku(QWidget):
         self.setFixedSize(self.width, self.height)
         self.mainLayout.addWidget(sudoku_widget)
 
-    # def setMatrix(self, matrix):
-    #     self.matrix = matrix
-    #     self.updateGridLayout()
-
-    # def updateGridLayout(self):
-    #     for i in range(len(self.matrix)):
-    #         for j in range(len(self.matrix[0])):
-    #             label = self.cell_labels[i][j]
-    #             label.setText(str(self.matrix[i][j]))
-    #             if self.matrix[i][j] > 0:
-    #                 label.setStyleSheet("background-color: #FFFFE6;")
-
     def on_button_clicked(self, option):
         if option:
-            self.matrix = generate("hard")
+            self.matrix = generate(option)
             self.clearMainLayout()
             self.sudoku()
             
