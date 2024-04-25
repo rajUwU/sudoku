@@ -16,11 +16,7 @@ matrix = [
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    solved = solve(matrix)
-    generated = generate("hard")
-    matrix = generated
-    # solved = solve(matrix)
-    # matrix = solved
+    matrix = [[""]*9 for _ in range(9)] 
     sudoku_app = Sudoku(matrix)
     sudoku_app.show()
     sys.exit(app.exec_())
