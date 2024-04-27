@@ -56,23 +56,23 @@ def generate(difficulty):
 
     for _ in range(empty_cells):
         i,j = random.choice([_ for _ in range(9)]), random.choice([_ for _ in range(9)])
-        grid[i][j] = 0
+        grid[i][j] = ""
 
     return grid
 
 if __name__ == '__main__':
 
-    generated = generate('easy')
-    if generated:
-        print(generated)
-    else:
-        print("Enter a valid difficulty")
+    # generated = generate('easy')
+    # if generated:
+    #     print(generated)
+    # else:
+    #     print("Enter a valid difficulty")
 
     # Solve the Sudoku puzzle and update the sampleMatrix
-    # solution = solve(sampleMatrix)
-    # if solution:
-    #     sampleMatrix = solution  # Update sampleMatrix with the solved grid
-    #     print("Sudoku puzzle solved successfully:")
-    #     print(sampleMatrix)
-    # else:
-    #     print("No solution found for the Sudoku puzzle.")
+    solution = solve(sampleMatrix)
+    if solution:
+        sampleMatrix = solution  # Update sampleMatrix with the solved grid
+        print("Sudoku puzzle solved successfully:")
+        print(sampleMatrix)
+    else:
+        print("No solution found for the Sudoku puzzle.")

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QLabel, QFrame,
                               QPushButton, QHBoxLayout, QVBoxLayout, QFormLayout, QComboBox, QLineEdit)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from functions import generate
+from functions import generate, solve
 
 
 class Sudoku(QWidget):
@@ -77,8 +77,8 @@ class Sudoku(QWidget):
                         label.setAlignment(Qt.AlignCenter)
                         label.setFixedSize(cell_size, cell_size)  # Set fixed size for each cell
                         label.setFrameShape(QFrame.Panel)
-                        if self.matrix[i+x][j+y] > 0:
-                            label.setStyleSheet("background-color: #FFFFE6;")
+                        if self.matrix[i+x][j+y]:
+                            label.setStyleSheet("background-color: #E6FFCC;")
                         # Increase font size
                         font = QFont()
                         font.setPointSize(14)
@@ -100,12 +100,18 @@ class Sudoku(QWidget):
 
     def on_button_clicked(self, option):
         self.clearMainLayout()
-        if option:
+        if option == 0:
+            print('Option Selected:', option)
+            self.solveSudoku()
+        elif option == 1:
+            print('Option Selected:', option)
+            self.matrix = solve(self.matrix)
+            if self.matrix:
+                self.createSudoku()   
+        else:
+            print('Option Selected:', option)
             self.matrix = generate(option)
             self.createSudoku()
-            
-        else:
-            self.solveSudoku()
 
     def clearMainLayout(self):
         while self.mainLayout.count():
@@ -115,8 +121,10 @@ class Sudoku(QWidget):
                 widget.deleteLater()
     
     def solveSudoku(self):
+        self.matrix = [[0]*9 for _ in range(9)] 
+        print(self.matrix)
         self.width = 580
-        self.height = 580
+        self.height = 600
         sudoku_widget = QWidget()
         grid_layout = QGridLayout()
         grid_layout.setHorizontalSpacing(0)  # Set horizontal spacing to 0
@@ -139,7 +147,7 @@ class Sudoku(QWidget):
                     for y in range(3):
                         font = QFont()
                         font.setPointSize(14)
-                        cell = SudokuCell()
+                        cell = SudokuCell(self.matrix, i + x, j + y)
                         cell.setFont(font)
                         cell.setObjectName("CellLabel")
                         cell.setAlignment(Qt.AlignCenter)
@@ -148,12 +156,21 @@ class Sudoku(QWidget):
                         grid_layout.addWidget(cell, i + x, j + y)
                     
         self.setFixedSize(self.width, self.height)
+
+        solveBtn = QPushButton("Solve")
+        solveBtn.clicked.connect(lambda: self.on_button_clicked(1))
         self.mainLayout.addWidget(sudoku_widget)
+        self.mainLayout.addWidget(solveBtn)
+
+
 
 class SudokuCell(QLineEdit):
-    def __init__(self, parent=None):
+    def __init__(self, matrix, x, y, parent=None):
         super().__init__(parent)
         self.setMaxLength(1)  # Set maximum length to 1 character
+        self.x = x
+        self.y = y
+        self.matrix = matrix
     def keyPressEvent(self, event):
         key = event.text()
         if key.isdigit():  # Check if the pressed key is a digit
@@ -166,6 +183,8 @@ class SudokuCell(QLineEdit):
             super().keyPressEvent(event)
             self.setStyleSheet("background-color: #E6FFCC;")
             self.lower()
+            self.matrix[self.x][self.y] = int(self.text())
+            print(self.matrix)
         else:
             event.ignore()  # Ignore non-numeric characters
         
